@@ -1,0 +1,174 @@
+set encoding=utf8
+set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp936,latin1
+
+"set termguicolors
+let mapleader=";"
+
+filetype on
+
+filetype plugin on
+
+set mouse=a
+
+vnoremap <Leader>y "*y
+
+nmap <Leader>p "*p
+
+nmap <Leader>q :q<CR>
+
+nmap <Leader>w :w<CR>
+
+nnoremap <Leader>wn <C-W><C-W>
+nnoremap <Leader>wl <C-W>l
+nnoremap <Leader>wh <C-W>h
+nnoremap <Leader>wk <C-W>k
+nnoremap <Leader>wj <C-W>j
+
+nnoremap <Leader>gg <C-B>
+nnoremap <Leader>ff <C-F>
+nnoremap <Leader>uu <C-U>
+nnoremap <Leader>dd <C-D>
+
+nmap <Leader>M %
+set incsearch
+set ignorecase
+set nocompatible
+set wildmenu
+
+call plug#begin('~/.vim/plugged')
+Plug 'vim-scripts/indexer.tar.gz'
+Plug 'vim-scripts/DfrankUtil'
+Plug 'vim-scripts/vimprj'
+Plug 'majutsushi/tagbar'
+Plug 'preservim/nerdtree'
+Plug 'fholgado/minibufexpl.vim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'easymotion/vim-easymotion'
+Plug 'marko-cerovac/material.nvim'
+Plug 'preservim/nerdcommenter'
+" https://github.com/google/vim-codefmt
+Plug 'google/vim-maktaba'
+Plug 'google/vim-codefmt'
+Plug 'google/vim-glaive'
+call plug#end()
+
+call glaive#Install()
+" Optional: Enable codefmt's default mappings on the <Leader>= prefix.
+Glaive codefmt plugin[mappings]
+Glaive codefmt google_java_executable="java -jar /ceph-hw/kangwei/dev_tools/google-java-format-1.15.0-all-deps.jar"
+
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:deoplete#enable_at_startup=1
+set completeopt+=noselect
+call deoplete#custom#option('omni_patterns', {
+    \ 'c': ['[^. *\t]\%(\.\|->\)\w*'],
+    \ 'cpp': ['[^. *\t]\%(\.\|->\)\w*', '[a-zA-Z_]\w*::'],
+    \})
+
+filetype plugin indent on
+" set path+=./**
+set tags=tags;
+
+" Configuration for easymotion
+" Disable default mappings
+let g:EasyMotion_do_mapping = 0
+" Turn on case-insensitive feature
+let g:EasyMotion_smartcase = 1
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+set laststatus=2
+set ruler
+set number
+set relativenumber
+set cursorline
+set hlsearch
+set cc=80
+
+syntax enable
+syntax on
+set spell
+
+colorscheme material
+let g:material_style = 'darker'
+
+filetype indent on
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+
+set foldmethod=syntax
+set nofoldenable
+
+nmap <Leader>fl :NERDTreeToggle<CR>
+let NERDTreeWinSize=30
+let NERDTreeWinPos="left"
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+let NERDTreeAutoDeleteBuffer=1
+
+map <Leader>bl :MBEToggle<CR>
+map <Leader>bn :MBEbn<CR>
+map <Leader>bb :MBEbp<CR>
+
+let tagbar_right=1
+nnoremap <Leader>tl :TagbarToggle<CR>
+let tagbar_width=35
+let g:tagbar_compact=1
+let g:tagbar_type_cpp = {
+     \ 'ctagstype' : 'c++',
+     \ 'kinds'     : [
+         \ 'c:classes:0:1',
+         \ 'd:macros:0:1',
+         \ 'e:enumerators:0:0',
+         \ 'f:functions:0:1',
+         \ 'g:enumeration:0:1',
+         \ 'm:members:0:1',
+         \ 'n:namespaces:0:1',
+         \ 'p:functions_prototypes:0:1',
+         \ 's:structs:0:1',
+         \ 't:typedefs:0:1',
+         \ 'u:unions:0:1',
+         \ 'v:global:0:1',
+         \ 'x:external:0:1'
+     \ ],
+     \ 'sro'        : '::',
+     \ 'kind2scope' : {
+         \ 'g' : 'enum',
+         \ 'n' : 'namespace',
+         \ 'c' : 'class',
+         \ 's' : 'struct',
+         \ 'u' : 'union'
+     \ },
+     \ 'scope2kind' : {
+         \ 'enum'      : 'g',
+         \ 'namespace' : 'n',
+         \ 'class'     : 'c',
+         \ 'struct'    : 's',
+         \ 'union'     : 'u'
+     \ }
+\ }
+
+let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q --langmap=C++:+.cu -R"
+
+" for codefmt
+augroup autoformat_settings
+  autocmd FileType bzl AutoFormatBuffer buildifier
+  autocmd FileType cuda,c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+  autocmd FileType dart AutoFormatBuffer dartfmt
+  autocmd FileType go AutoFormatBuffer gofmt
+  autocmd FileType gn AutoFormatBuffer gn
+  autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
+  autocmd FileType java AutoFormatBuffer google-java-format
+  "autocmd FileType python AutoFormatBuffer yapf
+  " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+  autocmd FileType rust AutoFormatBuffer rustfmt
+  autocmd FileType vue AutoFormatBuffer prettier
+augroup END
