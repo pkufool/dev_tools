@@ -1,7 +1,7 @@
 
 
 
-if [ ! d ~/dev_tools/nvim-linux64 ]; then
+if [ ! -d ~/dev_tools/nvim-linux64 ]; then
   wget https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -O ~/dev_tools/nvim-linux64.tar.gz
   pushd ~/dev_tools
   tar xvf nvim-linux64.tar.gz
@@ -9,21 +9,23 @@ if [ ! d ~/dev_tools/nvim-linux64 ]; then
   echo 'alias vim="~/dev_tools/nvim-linux64/bin/nvim"' >> ~/.bashrc
 fi
 
-if [ ! d ~/.config/nvim ]; then
+if [ ! -d ~/.config/nvim ]; then
   mkdir -p ~/.config/nvim
   mkdir -p ~/.vim
   cp vim/init.vim ~/.config/nvim
 fi
 
-if [ e ~/.vimrc ]; then
+if [ -e ~/.vimrc ]; then
   cp ~/.vimrc ~/.vimrc.bk
 fi
-cp ~/vim/vimrc ~/.vimrc
+cp ./vim/vimrc ~/.vimrc
 
-if [ e ~/.tmux.conf ]; then
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+if [ -e ~/.tmux.conf ]; then
   cp ~/.tmux.conf ~/.tmux.conf.bk
 fi
-cp ~/tmux/tmux.conf ~/.tmux.conf
+cp ./tmux/tmux.conf ~/.tmux.conf
 
 echo 'alias tn="tmux new -s"' >> ~/.bashrc
 echo 'alias tl="tmux list-session"' >> ~/.bashrc
