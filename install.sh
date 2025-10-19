@@ -1,10 +1,6 @@
-if [ ! -d ~/dev_tools/nvim-linux64 ]; then
-  wget https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -O ~/dev_tools/nvim-linux64.tar.gz
-  pushd ~/dev_tools
-  tar xf nvim-linux64.tar.gz
-  popd
-  echo 'alias vim="~/dev_tools/nvim-linux64/bin/nvim"' >> ~/.bashrc
-fi
+sudo apt install neovim
+
+echo 'alias vim=nvim' >> ~/.bashrc
 
 if [ ! -d ~/.config/nvim ]; then
   mkdir -p ~/.config/nvim
@@ -16,6 +12,21 @@ if [ -e ~/.vimrc ]; then
   cp ~/.vimrc ~/.vimrc.bk
 fi
 cp ./vim/vimrc ~/.vimrc
+
+# pyenv
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
+
+git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
+
+# python build deps
+sudo apt update; sudo apt install make build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev curl git \
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 pip install neovim
@@ -36,3 +47,8 @@ echo 'alias gd="git diff"' >> ~/.bashrc
 
 # for vim
 sudo apt install universal-ctags
+
+# wssh
+pip install webssh
+wssh --address=0.0.0.0 --port=8888 --encoding=utf-8 --font=SourceCodePro-Regular.ttf
+
