@@ -1,5 +1,6 @@
 ```bash
 sudo dd if=/dev/zero of=/swapfile bs=4096 count=1048576
+# 4GB
 ```
 
 ```bash
